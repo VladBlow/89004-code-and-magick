@@ -5,6 +5,9 @@ reviewFilter.classList.add('invisible');
 
 var template = document.querySelector('template');
 var reviewList = document.querySelector('.reviews-list');
+var headerClouds = document.querySelector('.header-clouds');
+var blockDemo = document.querySelector('.demo');
+var moveToX = 0;
 var elementToClone;
 var reviews;
 
@@ -180,12 +183,16 @@ var setFiltrationEnabled = function() {
 };
 
 /** @return {boolean} */
-// var isBottomReached = function() {
-//   var GAP = 100;
-//   var footerElement = document.querySelector('footer');
-//   var footerPosition = footerElement.getBoundingClientRect();
-//   return footerPosition.top - window.innerHeight - GAP <= 0;
-// };
+var isCloudReached = function() {
+  var cloudPosition = headerClouds.getBoundingClientRect();
+  return cloudPosition.bottom + 200 >= 0;
+};
+
+/** @return {boolean} */
+var isDemoReached = function() {
+  var demoPosition = blockDemo.getBoundingClientRect();
+  return demoPosition.bottom <= 0;
+};
 
 /**
  * @param {Array} hotels
@@ -193,9 +200,6 @@ var setFiltrationEnabled = function() {
  * @param {number} pageSize
  * @return {boolean}
  */
-// var isNextPageAvailable = function(rev, page, pageSize) {
-//   return page < Math.floor(rev.length / pageSize);
-// };
 
 var setMoreReviewEnabled = function() {
   var moreReviewButton = document.querySelector('.reviews-controls-more');
@@ -208,28 +212,34 @@ var setMoreReviewEnabled = function() {
   };
 };
 
-// var THROTTLE_DELAY = 100;
-//
-// var setScrollEnabled = function() {
-//
-//   var lastCall = Date.now();
-//
-//   window.addEventListener('scroll', function(evt) {
-//     if (Date.now() - lastCall >= THROTTLE_DELAY) {
-//       if (isBottomReached() &&
-//           isNextPageAvailable(reviews, pageNumber, PAGE_SIZE)) {
-//         pageNumber++;
-//         renderReviews(filteredReviews, pageNumber);
-//       }
-//     lastCall = Date.now();
-//     }
-//   });
-// };
+var THROTTLE_DELAY = 100;
 
+var setScrollEnabled = function() {
+
+  var lastCall = Date.now();
+
+  window.addEventListener('scroll', function() {
+
+    if (Date.now() - lastCall >= THROTTLE_DELAY) {
+      if (isCloudReached()) {
+        var moveToY = 0;
+        moveToX += 30;
+        headerClouds.style.backgroundPosition = moveToX + 'px ' + moveToY + 'px';
+        console.log('moooooooooove cloud'); /* для проверки в консоли */
+      }
+      lastCall = Date.now();
+    }
+
+    if(isDemoReached()) {
+      window.game.setStatus(window.Game.Verdict.PAUSE);
+    }
+  });
+};
 
 getReviews(function(loadedReviews) {
   reviews = loadedReviews;
   setFilterEnabled(true);
   setFiltrationEnabled();
   setMoreReviewEnabled();
+  setScrollEnabled();
 });
