@@ -727,3 +727,5 @@
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
 })();
+
+module.exports = './game';

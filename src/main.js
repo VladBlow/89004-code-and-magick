@@ -1,5 +1,5 @@
 'use strict';
 
-require('./form');
-require('./game');
-require('./reviews');
+var form = require('./form');
+var game = require('./game');
+var reviwes = require('./reviews');
