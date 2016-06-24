@@ -186,7 +186,7 @@
   /** @return {boolean} */
   var isCloudReached = function() {
     var cloudPosition = headerClouds.getBoundingClientRect();
-    return cloudPosition.bottom + 200 >= 0;
+    return cloudPosition.top - 200 >= 0;
   };
 
   /** @return {boolean} */
@@ -213,27 +213,29 @@
     };
   };
 
-  var THROTTLE_DELAY = 100;
-
   var setScrollEnabled = function() {
 
-    var lastCall = Date.now();
+    var oldScroll = document.body.scrollTop;
 
     window.addEventListener('scroll', function() {
 
-      if (Date.now() - lastCall >= THROTTLE_DELAY) {
-        if (isCloudReached()) {
-          var moveToY = 0;
-          moveToX += 30;
-          headerClouds.style.backgroundPosition = moveToX + 'px ' + moveToY + 'px';
-          console.log('moooooooooove cloud'); /* для проверки в консоли */
-        }
-        lastCall = Date.now();
+      isDemoReached() && window.game.setStatus(window.Game.Verdict.PAUSE);
+
+      if(isCloudReached()) return;
+
+      var newScroll = document.body.scrollTop;
+
+      var direction = newScroll - oldScroll;
+      oldScroll = newScroll;
+
+      if(direction > 0) {
+        moveToX += 10;
+      } else {
+        moveToX -= 10;
       }
 
-      if(isDemoReached()) {
-        window.game.setStatus(window.Game.Verdict.PAUSE);
-      }
+      headerClouds.style.backgroundPosition = moveToX + 'px 0px';
+
     });
   };
 
@@ -245,5 +247,3 @@
     setScrollEnabled();
   });
 })();
-
-module.exports = './review';
