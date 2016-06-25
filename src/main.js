@@ -46,7 +46,7 @@ var renderReviews = function(rev, page, replace) {
 
 /** @param {string} filter */
 var setFilterEnabled = function(filter) {
-  filteredReviews = filtered(filter);
+  filteredReviews = filtered(reviews, filter);
 
   pageNumber = 0;
   renderReviews(filteredReviews, pageNumber, true);

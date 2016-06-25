@@ -1,6 +1,6 @@
 'use strict';
 
-var filtered = function(filter) {
+var filtered = function(reviews, filter) {
   var reviewsToFilter = reviews.slice(0);
 
   var getFilterGoodReviews = function() {
