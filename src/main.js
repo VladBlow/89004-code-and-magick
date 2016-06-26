@@ -2,6 +2,7 @@
 
 require('./form');
 require('./game');
+require('./gallery');
 
 var filtered = require('./filter');
 var load = require('./load');
@@ -53,18 +54,19 @@ var setFilterEnabled = function(filter) {
 };
 
 var setFiltrationEnabled = function() {
-  var filters = reviewFilter.querySelectorAll('[name=reviews]');
-  for (var i = 0; i < filters.length; i++) {
-    filters[i].onclick = function() {
-      setFilterEnabled(this.id);
-    };
-  }
+  reviewFilter.addEventListener('click', function(evt) {
+    if (evt.target.classList.contains('reviews-filter-item')) {
+      setFilterEnabled(evt.target.getAttribute('for'));
+    }
+  });
 };
+
+
 
 /** @return {boolean} */
 var isCloudReached = function() {
   var cloudPosition = headerClouds.getBoundingClientRect();
-  return cloudPosition.top - 200 >= 0;
+  return cloudPosition.top - 200 <= 0;
 };
 
 /** @return {boolean} */
@@ -97,23 +99,25 @@ var setScrollEnabled = function() {
 
   window.addEventListener('scroll', function() {
 
-    isDemoReached() && window.game.setStatus(window.Game.Verdict.PAUSE);
-
-    if(isCloudReached()) return;
-
-    var newScroll = document.body.scrollTop;
-
-    var direction = newScroll - oldScroll;
-    oldScroll = newScroll;
-
-    if(direction > 0) {
-      moveToX += 10;
-    } else {
-      moveToX -= 10;
+    if(isDemoReached()) {
+      window.game.setStatus(window.Game.Verdict.PAUSE);
     }
 
-    headerClouds.style.backgroundPosition = moveToX + 'px 0px';
+    if(isCloudReached()) {
 
+      var newScroll = document.body.scrollTop;
+
+      var direction = newScroll - oldScroll;
+      oldScroll = newScroll;
+
+      if(direction > 0) {
+        moveToX += 10;
+      } else {
+        moveToX -= 10;
+      }
+
+      headerClouds.style.backgroundPosition = moveToX + 'px 0px';
+    }
   });
 };
 
