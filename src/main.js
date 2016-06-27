@@ -121,6 +121,7 @@ var setScrollEnabled = function() {
   });
 };
 
+
 load(function(loadedReviews) {
   reviews = loadedReviews;
   setFilterEnabled(true);
