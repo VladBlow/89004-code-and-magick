@@ -112,6 +112,7 @@
     browserCookies.set('Name', reviewName.value, {expires: formattedDateToExpire});
 
     form.submit();
-
   };
 })();
+
+module.exports = './form';
