@@ -11,8 +11,8 @@ var Review = function(data, container) {
   this.data = data;
   this.element = getElementsFromTemplate(this.data, container);
 
-  this.onReviewClick = function(evt) {
-    var reviewQuiz= document.querySelector('.review-quiz-answer');
+  this.onReviewClick = function() {
+    var reviewQuiz = document.querySelector('.review-quiz-answer');
 
     reviewQuiz.classList.add('review-quiz-answer-active');
   };

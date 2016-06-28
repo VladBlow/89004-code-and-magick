@@ -6,7 +6,6 @@ require('./gallery');
 
 var filtered = require('./filter');
 var load = require('./load');
-var getElementsFromTemplate = require('./get-element-from-template');
 var Review = require('./review');
 
 
