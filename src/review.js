@@ -19,7 +19,7 @@ var Review = function(data, container) {
 
   this.remove = function() {
     this.element.removeEventListener('click', this.onReviewClick);
-    this.element.parentNode.removeChild(this.element);
+    container.remove(this.element);
   };
 
   this.element.addEventListener('click', this.onReviewClick);
