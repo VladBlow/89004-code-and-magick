@@ -8,8 +8,7 @@ var getElementsFromTemplate = require('./get-element-from-template');
  * @constructor
  */
 var Review = function(data, container) {
-  this.data = data;
-  this.element = getElementsFromTemplate(this.data, container);
+  this.element = getElementsFromTemplate(data, container);
 
   this.onReviewClick = function() {
     var reviewQuiz = document.querySelector('.review-quiz-answer');
