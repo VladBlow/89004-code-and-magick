@@ -6,7 +6,7 @@ require('./gallery');
 
 var filtered = require('./filter');
 var load = require('./load');
-var getElementsFromTemplate = require('./get-element-from-template');
+var Review = require('./review');
 
 
 var headerClouds = document.querySelector('.header-clouds');
@@ -34,15 +34,22 @@ var renderReviews = function(rev, page, replace) {
 
   if (replace) {
     reviewList.innerHTML = '';
+    // filteredReviews.forEach(function(review) {
+    //   review.remove();
+    // });
   }
 
   var from = page * PAGE_SIZE;
   var to = from + PAGE_SIZE;
 
+  var container = document.createDocumentFragment();
+
   rev.slice(from, to).forEach(function(data) {
-    getElementsFromTemplate(data, reviewList);
+    filteredReviews.push(new Review(data, container));
     reviewFilter.classList.remove('invisible');
   });
+
+  reviewList.appendChild(container);
 };
 
 /** @param {string} filter */
@@ -88,8 +95,8 @@ var setMoreReviewEnabled = function() {
   moreReviewButton.classList.remove('invisible');
 
   moreReviewButton.onclick = function() {
-    renderReviews(filteredReviews, pageNumber);
     pageNumber++;
+    renderReviews(filteredReviews, pageNumber);
   };
 };
 
