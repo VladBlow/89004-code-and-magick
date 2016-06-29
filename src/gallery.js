@@ -7,7 +7,6 @@ var currentNumber = document.querySelector('.preview-number-current');
 var totalNumber = document.querySelector('.preview-number-total');
 var prevLinkNode = document.querySelector('.overlay-gallery-control-left');
 var nextLinkNode = document.querySelector('.overlay-gallery-control-right');
-var photoGallery = document.querySelector('.photogallery');
 
 //* @param {Array.<Object>}
 var galleryPictures = [];
@@ -19,88 +18,89 @@ var currentIndex;
 
 var img = new Image();
 
-photoGallery.addEventListener('click', onContainerClick);
+var Gallery = function() {
+  var self = this;
 
-/**
- * @param {Array.<Object>} evt
- */
-function onContainerClick(evt) {
-  if (evt.target.dataset.number !== void 0) {
-    showGallery(Number(evt.target.dataset.number));
-  }
-}
+  this.element = document.querySelector('.overlay-gallery');
 
-/**
- * @param {number} pictureNumber
- */
-function showGallery(pictureNumber) {
+  /**
+   * @param {Array.<Object>} evt
+   */
+  this.onContainerClick = function(evt) {
+    if (evt.target.dataset.number !== void 0) {
+      self.showGallery(Number(evt.target.dataset.number));
+    }
+  };
 
-  nextLinkNode.addEventListener('click', showNextPic);
-  prevLinkNode.addEventListener('click', showPrevPic);
+  /**
+   * @param {number} pictureNumber
+   */
+  this.showGallery = function(pictureNumber) {
 
-  closeBtn.addEventListener('click', hideGallery);
-  document.addEventListener('keydown', closeGalleryEsc);
+    nextLinkNode.addEventListener('click', this.showNextPic);
+    prevLinkNode.addEventListener('click', this.showPrevPic);
 
-  galleryBlock.classList.remove('invisible');
+    closeBtn.addEventListener('click', this.hideGallery);
+    document.addEventListener('keydown', this.closeGalleryEsc);
 
-  showPicture(pictureNumber);
-}
+    galleryBlock.classList.remove('invisible');
 
-function showNextPic() {
-  showPicture(++currentIndex);
-}
+    self.showPicture(pictureNumber);
+  };
 
-function showPrevPic() {
-  showPicture(--currentIndex);
-}
+  this.showNextPic = function() {
+    self.showPicture(++currentIndex);
+  };
 
-/**
- * @param {number} pictureNumber
- */
-function showPicture(pictureNumber) {
-  currentIndex = pictureNumber;
+  this.showPrevPic = function() {
+    self.showPicture(--currentIndex);
+  };
 
-  if (currentIndex > galleryPictures.length - 1) {
-    currentIndex = 0;
-  }
+  this.showPicture = function(pictureNumber) {
+    currentIndex = pictureNumber;
 
-  if (currentIndex < 0) {
-    currentIndex = galleryPictures.length - 1;
-  }
-  img.setAttribute('src', galleryPictures[currentIndex]);
-  picturesContainer.appendChild(img);
-  currentNumber.textContent = currentIndex + 1;
-  totalNumber.textContent = images.length;
-}
+    if (currentIndex > galleryPictures.length - 1) {
+      currentIndex = 0;
+    }
 
-/**
- * @param {Array.<number>} nodeList
- */
-function collectPictures(nodeList) {
-  var i;
-  for (i = 0; i < nodeList.length; i++) {
-    galleryPictures.push(nodeList[i].getAttribute('src'));
+    if (currentIndex < 0) {
+      currentIndex = galleryPictures.length - 1;
+    }
+    img.setAttribute('src', galleryPictures[currentIndex]);
+    picturesContainer.appendChild(img);
+    currentNumber.textContent = currentIndex + 1;
+    totalNumber.textContent = images.length;
+  };
 
-    nodeList[i].dataset.number = i;
-  }
-}
+  this.collectPictures = function(nodeList) {
+    var i;
+    for (i = 0; i < nodeList.length; i++) {
+      galleryPictures.push(nodeList[i].getAttribute('src'));
 
-function closeGalleryEsc(evt) {
-  if (evt.which === KEY_CODE_ESC) {
-    hideGallery();
-  }
-}
+      nodeList[i].dataset.number = i;
+    }
+  };
 
-function hideGallery() {
-  nextLinkNode.removeEventListener('click', showNextPic);
+  this.closeGalleryEsc = function(evt) {
+    if (evt.which === KEY_CODE_ESC) {
+      self.hideGallery();
+    }
+  };
 
-  prevLinkNode.removeEventListener('click', showPrevPic);
+  this.hideGallery = function() {
+    nextLinkNode.removeEventListener('click', this.showNextPic);
 
-  closeBtn.removeEventListener('click', hideGallery);
+    prevLinkNode.removeEventListener('click', this.showPrevPic);
 
-  document.removeEventListener('keydown', closeGalleryEsc);
+    closeBtn.removeEventListener('click', this.hideGallery);
 
-  galleryBlock.classList.add('invisible');
-}
+    document.removeEventListener('keydown', this.closeGalleryEsc);
 
-collectPictures(images);
+    galleryBlock.classList.add('invisible');
+  };
+
+  self.collectPictures(images);
+};
+
+
+module.exports = new Gallery();
