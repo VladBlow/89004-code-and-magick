@@ -71,6 +71,8 @@ var setFilterEnabled = function(filter) {
 };
 
 var setFiltrationEnabled = function() {
+  setFilterEnabled(setStartFilter);
+
   reviewFilter.addEventListener('click', function(evt) {
     if (evt.target.classList.contains('reviews-filter-item')) {
       setFilterEnabled(evt.target.getAttribute('for'));
@@ -142,8 +144,8 @@ photoGallery.addEventListener('click', gallery.onContainerClick);
 
 load(function(loadedReviews) {
   reviews = loadedReviews;
-  setFilterEnabled(true);
-  setFiltrationEnabled(setStartFilter);
+  setFilterEnabled(setStartFilter);
+  setFiltrationEnabled();
   setMoreReviewEnabled();
   setScrollEnabled();
 });
