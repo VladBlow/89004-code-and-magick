@@ -5,6 +5,7 @@ require('./game');
 
 var gallery = require('./gallery');
 var filtered = require('./filter');
+var filtersType = require('./filters-type');
 var load = require('./load');
 var Review = require('./review');
 
@@ -29,6 +30,9 @@ var PAGE_SIZE = 3;
 /** @type {number} */
 var pageNumber = 1;
 
+var DEFAULT_FILTER = localStorage.getItem('lastFilter') || filtersType.ALL;
+
+var setStartFilter = localStorage.getItem('lastFilter') || DEFAULT_FILTER;
 
 /** @param {Array.<Object>} reviews */
 var renderReviews = function(rev, page, replace) {
@@ -55,6 +59,11 @@ var renderReviews = function(rev, page, replace) {
 
 /** @param {string} filter */
 var setFilterEnabled = function(filter) {
+  var filterSwitches = reviewFilter.elements['reviews'];
+  if (filterSwitches.value !== filtersType) {
+    filterSwitches.value = filtersType;
+  }
+
   filteredReviews = filtered(reviews, filter);
 
   pageNumber = 0;
@@ -134,7 +143,7 @@ photoGallery.addEventListener('click', gallery.onContainerClick);
 load(function(loadedReviews) {
   reviews = loadedReviews;
   setFilterEnabled(true);
-  setFiltrationEnabled();
+  setFiltrationEnabled(setStartFilter);
   setMoreReviewEnabled();
   setScrollEnabled();
 });
