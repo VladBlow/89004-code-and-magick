@@ -59,10 +59,9 @@ var renderReviews = function(rev, page, replace) {
 
 /** @param {string} filter */
 var setFilterEnabled = function(filter) {
-  var filterSwitches = reviewFilter.elements['reviews'];
-  if (filterSwitches.value !== filtersType) {
-    filterSwitches.value = filtersType;
-  }
+
+  var currentFilter = document.getElementById(filter);
+  currentFilter.setAttribute('checked', true);
 
   filteredReviews = filtered(reviews, filter);
 
@@ -71,8 +70,6 @@ var setFilterEnabled = function(filter) {
 };
 
 var setFiltrationEnabled = function() {
-  setFilterEnabled(setStartFilter);
-
   reviewFilter.addEventListener('click', function(evt) {
     if (evt.target.classList.contains('reviews-filter-item')) {
       setFilterEnabled(evt.target.getAttribute('for'));
