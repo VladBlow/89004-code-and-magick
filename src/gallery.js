@@ -105,7 +105,7 @@ var Gallery = function() {
 
     galleryBlock.classList.add('invisible');
 
-    self.changeUrl();
+    self.changeHash();
   };
 
   this.changeHash = function(photoSrc) {
@@ -121,7 +121,7 @@ var Gallery = function() {
   self.collectPictures(images);
 
   this.onHashChange = function() {
-    var hashValidate = location.hash.match(/#photo\/(\S+)/);
+    var hashValidate = location.hash.match(self.hashRegMatch);
     if (hashValidate) {
       var pictureIndex = galleryPictures.indexOf(hashValidate[1]);
       self.showGallery(pictureIndex);
