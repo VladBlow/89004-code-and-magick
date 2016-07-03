@@ -27,8 +27,10 @@ var Gallery = function() {
    * @param {Array.<Object>} evt
    */
   this.onContainerClick = function(evt) {
+    evt.preventDefault();
     if (evt.target.dataset.number !== void 0) {
-      self.showGallery(Number(evt.target.dataset.number));
+      // self.showGallery(Number(evt.target.dataset.number));
+      self.changeHash(evt.target.getAttribute('src'));
     }
   };
 
@@ -49,11 +51,15 @@ var Gallery = function() {
   };
 
   this.showNextPic = function() {
-    self.showPicture(++currentIndex);
+    var nextSrc = galleryPictures[++currentIndex] || galleryPictures[0];
+    self.showGallery(currentIndex++);
+    self.changeUrl(nextSrc);
   };
 
   this.showPrevPic = function() {
-    self.showPicture(--currentIndex);
+    var nextSrc = galleryPictures[--currentIndex] || galleryPictures[galleryPictures.length - 1];
+    self.showGallery(currentIndex--);
+    self.changeUrl(nextSrc);
   };
 
   this.showPicture = function(pictureNumber) {
@@ -70,6 +76,7 @@ var Gallery = function() {
     picturesContainer.appendChild(img);
     currentNumber.textContent = currentIndex + 1;
     totalNumber.textContent = images.length;
+    self.setHash(galleryPictures[currentIndex]);
   };
 
   this.collectPictures = function(nodeList) {
@@ -97,10 +104,33 @@ var Gallery = function() {
     document.removeEventListener('keydown', this.closeGalleryEsc);
 
     galleryBlock.classList.add('invisible');
+
+    self.changeUrl();
   };
 
-  self.collectPictures(images);
-};
+  this.changeHash = function(photoSrc) {
+    if (photoSrc) {
+      window.location.hash = '#photo/' + photoSrc;
+    } else {
+      window.location.hash = '';
+    }
+  };
 
+  this.hashRegMatch = /#photo\/(\S+)/;
+
+  self.collectPictures(images);
+
+  this.onHashChange = function() {
+    var hashValidate = location.hash.match(/#photo\/(\S+)/);
+    if (hashValidate) {
+      var pictureIndex = galleryPictures.indexOf(hashValidate[1]);
+      self.showGallery(pictureIndex);
+    }
+  };
+
+  this.onHashChange();
+
+  window.addEventListener('hashchange', this.onHashChange);
+};
 
 module.exports = new Gallery();
