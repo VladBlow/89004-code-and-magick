@@ -10,19 +10,19 @@ var getElementsFromTemplate = require('./get-element-from-template');
 var Review = function(data, container) {
   this.element = getElementsFromTemplate(data, container);
 
-  this.onReviewClick = function() {
-    var reviewQuiz = document.querySelector('.review-quiz-answer');
-
-    reviewQuiz.classList.add('review-quiz-answer-active');
-  };
-
-  this.remove = function() {
-    this.element.removeEventListener('click', this.onReviewClick);
-    container.remove(this.element);
-  };
-
   this.element.addEventListener('click', this.onReviewClick);
   container.appendChild(this.element);
+};
+
+Review.prototype.onReviewClick = function() {
+  var reviewQuiz = document.querySelector('.review-quiz-answer');
+
+  reviewQuiz.classList.add('review-quiz-answer-active');
+};
+
+Review.prototype.remove = function() {
+  this.element.removeEventListener('click', this.onReviewClick);
+  this.container.remove(this.element);
 };
 
 
