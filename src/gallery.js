@@ -19,16 +19,6 @@ var currentIndex;
 var img = new Image();
 
 var Gallery = function() {
-  this.onContainerClick = this.onContainerClick.bind(this);
-  this.showGallery = this.showGallery.bind(this);
-  this.showNextPic = this.showNextPic.bind(this);
-  this.showPrevPic = this.showPrevPic.bind(this);
-  this.showPicture = this.showPicture.bind(this);
-  this.collectPictures = this.collectPictures.bind(this);
-  this.closeGalleryEsc = this.closeGalleryEsc.bind(this);
-  this.hideGallery = this.hideGallery.bind(this);
-  this.changeHash = this.changeHash.bind(this);
-  this.onHashChange = this.onHashChange.bind(this);
 
   this.element = document.querySelector('.overlay-gallery');
 
@@ -36,20 +26,17 @@ var Gallery = function() {
 
   this.onHashChange();
 
-  window.addEventListener('hashchange', this.onHashChange);
+  window.addEventListener('hashchange', this.onHashChange.bind(this));
 };
 
-/**
- * @param {Array.<Object>} evt
- */
-Gallery.prototype.onContainerClick = function(evt) {
-  evt.preventDefault();
-  if (evt.target.dataset.number !== void 0) {
-    // self.showGallery(Number(evt.target.dataset.number));
-    console.log(this);
-    this.changeHash(evt.target.getAttribute('src'));
-
-  }
+Gallery.prototype.setContainerClick = function(node) {
+  var cb = function(evt) {
+    evt.preventDefault();
+    if (evt.target.dataset.number !== void 0) {
+      this.changeHash(evt.target.getAttribute('src'));
+    }
+  };
+  node.addEventListener('click', cb.bind(this));
 };
 
 /**
@@ -57,11 +44,11 @@ Gallery.prototype.onContainerClick = function(evt) {
  */
 Gallery.prototype.showGallery = function(pictureNumber) {
 
-  nextLinkNode.addEventListener('click', this.showNextPic);
-  prevLinkNode.addEventListener('click', this.showPrevPic);
+  nextLinkNode.addEventListener('click', this.showNextPic.bind(this));
+  prevLinkNode.addEventListener('click', this.showPrevPic.bind(this));
 
-  closeBtn.addEventListener('click', this.hideGallery);
-  document.addEventListener('keydown', this.closeGalleryEsc);
+  closeBtn.addEventListener('click', this.hideGallery.bind(this));
+  document.addEventListener('keydown', this.closeGalleryEsc.bind(this));
 
   galleryBlock.classList.remove('invisible');
 
@@ -70,13 +57,13 @@ Gallery.prototype.showGallery = function(pictureNumber) {
 
 Gallery.prototype.showNextPic = function() {
   var nextSrc = galleryPictures[++currentIndex] || galleryPictures[0];
-  this.showGallery(currentIndex++);
+  this.showGallery(++currentIndex);
   this.changeHash(nextSrc);
 };
 
 Gallery.prototype.showPrevPic = function() {
   var nextSrc = galleryPictures[--currentIndex] || galleryPictures[galleryPictures.length - 1];
-  this.showGallery(currentIndex--);
+  this.showGallery(--currentIndex);
   this.changeHash(nextSrc);
 };
 
@@ -144,4 +131,4 @@ Gallery.prototype.onHashChange = function() {
   }
 };
 
-module.exports = new Gallery();
+module.exports = Gallery;

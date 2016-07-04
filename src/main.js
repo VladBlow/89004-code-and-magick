@@ -3,11 +3,13 @@
 require('./form');
 require('./game');
 
-var gallery = require('./gallery');
+var Gallery = require('./gallery');
 var filtered = require('./filter');
 var filtersType = require('./filters-type');
 var load = require('./load');
 var Review = require('./review');
+
+var gallery = new Gallery();
 
 
 var photoGallery = document.querySelector('.photogallery');
@@ -137,7 +139,7 @@ var setScrollEnabled = function() {
   });
 };
 
-photoGallery.addEventListener('click', gallery.onContainerClick);
+gallery.setContainerClick(photoGallery);
 
 load(function(loadedReviews) {
   reviews = loadedReviews;
